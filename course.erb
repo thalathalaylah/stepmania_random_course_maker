@@ -1,0 +1,7 @@
+#COURSE:Warming up
+#SCRIPTER:<%= auther %>
+#METER:<%= meter %>
+
+<% songs.each do |song| %>
+#SONG:<%= song[:path] %>:<%= song[:difficulty] %>:nodifficult,<%= song[:speed] %>x;
+<% end %>
