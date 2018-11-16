@@ -1,7 +1,7 @@
-#COURSE:Warming up
+#COURSE:<%= course_name %>
 #SCRIPTER:<%= auther %>
 #METER:<%= meter %>
 
 <% songs.each do |song| %>
-#SONG:<%= song[:path] %>:<%= song[:difficulty] %>:nodifficult,<%= song[:speed] %>x;
+#SONG:<%= song.relative_dir %>:<%= song.difficulty.find{|di| di&.[](:level) == target_level}[:difficulty] %>:nodifficult,<%= song.speed(target_bpms_array) %>x;
 <% end %>
