@@ -1,3 +1,5 @@
+require './difficulty'
+
 class Song
   def initialize(app_dir, simfile_path, simfile)
     display_bpm = ''
@@ -7,21 +9,24 @@ class Song
       bpms += (/bpms/i =~ line ? line : '')
     end
 
-    difficulty = detect_difficulty(simfile, 'NOTEDATA')
-    if difficulty == ''
-      difficulty = detect_difficulty(simfile, 'NOTES')
-      difficulty = difficulty.split("\r\n")
-                       .each_slice(5)
-                       .map{ |item| item.reduce(''){|result, item| result + item.strip} }
-                       .select{ |item| item.include?('dance-single') }
-                       .map{ |item| /#notes:dance-single::(?<difficulty>[a-zA-z]+):(?<level>[0-9]+)/i.match(item) }
-    else
-      difficulty = difficulty.split("\r\n")
-                       .each_slice(5)
-                       .map{ |item| item.reduce(''){|result, item| result + item.strip} }
-                       .select{ |item| item.include?('dance-single') }
-                       .map{ |item| /#notedata:;#stepstype:dance-single;#difficulty:(?<difficulty>[a-zA-z]+);#meter:(?<level>[0-9]+)/i.match(item) }
+    difficulties = detect_difficulty(simfile, 'NOTEDATA')
+    if difficulties == ''
+      difficulties = detect_difficulty(simfile, 'NOTES')
     end
+
+    @difficulties = difficulties.split("\r\n")
+                        .each_slice(5)
+                        .map {|item| item.reduce('') {|result, item| result + item.strip}}
+                        .select {|item| item.include?('dance-single')}
+                        .map {|item|
+                          dif = Difficulty::generate(item)
+                          if dif.nil?
+                            pp simfile_path
+                            pp item
+                          end
+                          dif
+                        }
+                        .delete_if {|item| item.nil?}
 
 
     display_bpm_str = /#DISPLAYBPM:(?<bpm>[[:alnum:]:.]+)/i.match(display_bpm.partition("\r")[0])
@@ -29,7 +34,6 @@ class Song
 
     @display_bpm = display_bpm_str ? display_bpm_str[:bpm] : nil
     @bpm = bpm_str ? bpm_str[:bpm] : nil
-    @difficulty = difficulty
     @simfile_full_path = simfile_path
     @app_dir = app_dir
   end
@@ -39,7 +43,7 @@ class Song
   end
 
   def soflan?
-    @display_bpm? !@display_bpm.include?(':') : true
+    @display_bpm ? !@display_bpm.include?(':') : true
   end
 
   def speed(target_bpms_array)
@@ -47,9 +51,9 @@ class Song
       speed = 1.0 + 0.25 * num
       [speed, speed * bpm_num]
     end
-    result = result_array.find{|info| target_bpms_array[0][0] <= info[1] && info[1] <= target_bpms_array[0][1]}
+    result = result_array.find {|info| target_bpms_array[0][0] <= info[1] && info[1] <= target_bpms_array[0][1]}
     unless result
-      result = result_array.find{|info| target_bpms_array[1][0] <= info[1] && info[1] <= target_bpms_array[1][1]}
+      result = result_array.find {|info| target_bpms_array[1][0] <= info[1] && info[1] <= target_bpms_array[1][1]}
     end
     result[0]
   end
@@ -61,7 +65,7 @@ class Song
     tmp[0] + '/' + tmp[1]
   end
 
-  attr_reader :bpm, :display_bpm, :difficulty, :simfile_full_path
+  attr_reader :bpm, :display_bpm, :simfile_full_path, :difficulties
 
   private
   def detect_difficulty(content, sign)

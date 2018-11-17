@@ -14,14 +14,16 @@ all_songs = simfiles.map do |simfile_path|
 end
 
 pp all_songs.size
+pp all_songs.select{|song| song.difficulties[0].difficulty_str != nil}.size
 
-target_level = '10'
+target_level = 10
 sample_number = 6
 target_bpms_array = [[400, 430], [380, 400]]
 
 songs = all_songs.select {|music| music.soflan? }  # ソフラン除外（倍速を決められないため）
-    .select{|music| music.difficulty.find{|difficulty| difficulty&.[](:level) == target_level}} # 曲レベル指定取得
+    .select{|music| music.difficulties.find{|difficulty| difficulty.level == target_level}} # 曲レベル指定取得
     .sample(sample_number) # プレイしたい曲数分抜き出す
+pp songs
 
 # pp data.select{|music| music.difficulty[0][:difficulty] != nil}.size
 
@@ -42,7 +44,5 @@ File.open('course.erb', 'r') do |erb|
     f.print(ERB.new(erb.read).result(binding))
   end
 end
-
-pp songs
 
 Open3.pipeline_rw('open ' + app_dir + '/StepMania.app')
