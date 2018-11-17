@@ -15,6 +15,10 @@ class Difficulty
       Difficulty.new(match_data[:difficulty], match_data[:level].to_i)
     end
   end
+end
+
+
+class Difficulty
 
   # @param [String]  difficulty_str 難易度文字列
   # @param [Fixnum]  level 難易度数値
