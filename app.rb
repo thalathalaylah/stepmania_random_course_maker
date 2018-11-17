@@ -15,11 +15,11 @@ end
 
 pp all_songs.size
 
-target_level = '11'
-sample_number = 3
+target_level = '10'
+sample_number = 6
 target_bpms_array = [[400, 430], [380, 400]]
 
-songs = all_songs.select {|music| music.display_bpm ? !music.display_bpm.include?(':') : true}  # ソフラン除外（倍速を決められないため）
+songs = all_songs.select {|music| music.soflan? }  # ソフラン除外（倍速を決められないため）
     .select{|music| music.difficulty.find{|difficulty| difficulty&.[](:level) == target_level}} # 曲レベル指定取得
     .sample(sample_number) # プレイしたい曲数分抜き出す
 
@@ -32,7 +32,7 @@ songs = all_songs.select {|music| music.display_bpm ? !music.display_bpm.include
 
 #target.map{|music| music.speed([[400, 430], [380, 400]])}
 
-course_file_name = 'test2.crs'
+course_file_name = 'test.crs'
 course_name = 'advance'
 auther = 'Thalathalaylah'
 meter = 'Medium:10'

@@ -38,6 +38,10 @@ class Song
     (@display_bpm ? /(?<bpm>[0-9]+)/.match(@display_bpm)[:bpm] : /(?<bpm>[0-9]+)/.match(@bpm)[:bpm]).to_i
   end
 
+  def soflan?
+    @display_bpm? !@display_bpm.include?(':') : true
+  end
+
   def speed(target_bpms_array)
     result_array = (0..16).map do |num|
       speed = 1.0 + 0.25 * num
