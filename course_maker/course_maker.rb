@@ -4,7 +4,7 @@ require './course_maker/song'
 
 module CourseMaker
   class CourseSetting
-    VALS = [:target_level, :sample_number, :target_bpms_array, :course_name, :meter, :scripter]
+    VALS = [:target_level, :sample_number, :target_bpm_ranges, :course_name, :meter, :scripter]
 
     def initialize(setting_hash)
       VALS.each do |val|

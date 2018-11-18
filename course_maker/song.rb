@@ -42,16 +42,17 @@ module CourseMaker
       @display_bpm ? !@display_bpm.include?(':') : true
     end
 
-    def speed(target_bpms_array)
-      result_array = (0..16).map do |num|
+    def speed(target_bpm_ranges)
+      speed_and_bpm_array = (0..16).map do |num|
         speed = 1.0 + 0.25 * num
         [speed, speed * bpm_num]
       end
-      result = result_array.find {|info| target_bpms_array[0][0] <= info[1] && info[1] <= target_bpms_array[0][1]}
-      unless result
-        result = result_array.find {|info| target_bpms_array[1][0] <= info[1] && info[1] <= target_bpms_array[1][1]}
-      end
-      result[0]
+
+      target_bpm_ranges.map do |target_bpm_slow, target_bpm_fast|
+        speed_and_bpm_array.find do |speed_and_bpm|
+          target_bpm_slow <= speed_and_bpm[1] && speed_and_bpm[1] <= target_bpm_fast
+        end
+      end.find { |speed_and_bpm| speed_and_bpm }[0]
     end
 
     def relative_dir

@@ -3,5 +3,5 @@
 #METER:<%= setting.meter %>
 
 <% songs.each do |song| %>
-#SONG:<%= song.relative_dir %>:<%= song.difficulties.find{|di| di.level == setting.target_level}.difficulty_str %>:nodifficult,<%= song.speed(setting.target_bpms_array) %>x;
+#SONG:<%= song.relative_dir %>:<%= song.difficulties.find{|di| di.level == setting.target_level}.difficulty_str %>:nodifficult,<%= song.speed(setting.target_bpm_ranges) %>x;
 <% end %>

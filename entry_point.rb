@@ -7,7 +7,7 @@ app_dir = '/Applications/StepMania-5.0.12'
 setting_hash = {
     target_level:10,
     sample_number:8,
-    target_bpms_array:[[400, 430], [380, 400]],
+    target_bpm_ranges:[[400, 430], [380, 400], [300, 380]],
     course_name:'WarmingUp',
     meter:'Medium:10',
     scripter:'Thalathalaylah'
