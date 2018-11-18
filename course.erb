@@ -1,7 +1,7 @@
-#COURSE:<%= course_name %>
-#SCRIPTER:<%= scripter %>
-#METER:<%= meter %>
+#COURSE:<%= setting.course_name %>
+#SCRIPTER:<%= setting.scripter %>
+#METER:<%= setting.meter %>
 
 <% songs.each do |song| %>
-#SONG:<%= song.relative_dir %>:<%= song.difficulties.find{|di| di.level == target_level}.difficulty_str %>:nodifficult,<%= song.speed(target_bpms_array) %>x;
+#SONG:<%= song.relative_dir %>:<%= song.difficulties.find{|di| di.level == setting.target_level}.difficulty_str %>:nodifficult,<%= song.speed(setting.target_bpms_array) %>x;
 <% end %>

@@ -3,7 +3,26 @@ require './course_maker/song'
 
 
 module CourseMaker
-  def make(app_dir, target_level, sample_number, target_bpms_array, course_name, meter, scripter)
+  class CourseSetting
+    VALS = [:target_level, :sample_number, :target_bpms_array, :course_name, :meter, :scripter]
+
+    def initialize(setting_hash)
+      VALS.each do |val|
+        if setting_hash[val]
+          eval("@#{val.to_s} = setting_hash[:#{val}]")
+        else
+          raise ArgumentError.new("require param \"#{val}\"")
+        end
+      end
+    end
+
+    VALS.each {|val| attr_reader val}
+  end
+
+  # @param [Object]  app_dir
+  # @param [CourseMaker::CourseSetting]  setting
+  # @return [File]
+  def make(app_dir, setting)
     simfiles = %w(.sm .ssc).reduce([]) {|result, item| result + Dir.glob(app_dir + '/Songs/*/*/*' + item)}
 
     all_songs = simfiles.map do |simfile_path|
@@ -17,10 +36,10 @@ module CourseMaker
     pp all_songs.select {|song| song.difficulties[0].difficulty_str != nil}.size
 
     songs = all_songs.select {|song| song.soflan?} # ソフラン除外（倍速を決められないため）
-                .select {|song| song.difficulties.find {|difficulty| difficulty.level == target_level}} # 曲レベル指定取得
-                .sample(sample_number) # プレイしたい曲数分抜き出す
+                .select {|song| song.difficulties.find {|difficulty| difficulty.level == setting.target_level}} # 曲レベル指定取得
+                .sample(setting.sample_number) # プレイしたい曲数分抜き出す
 
-    course_file_name = course_name + '.crs'
+    course_file_name = setting.course_name + '.crs'
     File.open('course.erb', 'r') do |erb|
       File.open(app_dir + '/Courses/' + course_file_name, 'w') do |f|
         f.print(ERB.new(erb.read).result(binding))
