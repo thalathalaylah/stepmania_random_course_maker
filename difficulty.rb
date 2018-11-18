@@ -1,6 +1,6 @@
 # Factory実装
 class Difficulty
-  def self.generate_all_difficulties(simfile)
+  def self.generate_all_difficulties(simfile, path)
     simfile.include?('#VERSION') ? generate_all_from_ssc(simfile) : generate_all_from_sm(simfile)
   end
 
@@ -27,33 +27,9 @@ class Difficulty
 
 
   def self.generate_all_from_sm(simfile)
-    difficulties = detect_difficulty(simfile, 'NOTES')
-    difficulties = difficulties.split("\r\n")
-                       .each_slice(5)
-                       .map {|item| item.reduce('') {|result, item| result + item.strip}}
-                       .select {|item| item.include?('dance-single')}
-    difficulties = difficulties
-                       .map {|item|
-                         dif = generate_from_sm(item)
-                         if dif.nil?
-                           pp item
-                         end
-                         dif
-                       }
-                       .delete_if {|item| item.nil?}
-    difficulties
-  end
-
-  # @param [String]  notedata_str simfile中の各難易度に関する情報を含む文字列
-  # @return [Difficulty|Nil] notedata_strが不正な形式だった場合nilを返す
-  def self.generate_from_sm(notedata_str)
-    match_data =
-        /#notes:dance-single::(?<difficulty>[a-zA-z]+):(?<level>[0-9]+)/i
-            .match(notedata_str)
-
-    if match_data
-      Difficulty.new(match_data[:difficulty], match_data[:level].to_i)
-    end
+    simfile
+        .scan(/#NOTES:[\s]+dance-single:[\s]+:[\s]+([a-zA-Z]+):[\s]+([0-9]+):/)
+        .map{ |match| Difficulty.new(match[0], match[1].to_i) }
   end
 
   def self.generate_all_from_ssc(simfile)
