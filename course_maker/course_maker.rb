@@ -32,9 +32,6 @@ module CourseMaker
       end
     end
 
-    pp all_songs.size
-    pp all_songs.select {|song| song.difficulties[0].difficulty_str != nil}.size
-
     songs = all_songs.select {|song| song.soflan?} # ソフラン除外（倍速を決められないため）
                 .select {|song| song.difficulties.find {|difficulty| difficulty.level == setting.target_level}} # 曲レベル指定取得
                 .sample(setting.sample_number) # プレイしたい曲数分抜き出す
@@ -49,4 +46,3 @@ module CourseMaker
 
   module_function :make
 end
-

@@ -56,10 +56,7 @@ module CourseMaker
     end
 
     def relative_dir
-      tmp = @simfile_full_path
-      tmp[@app_dir + '/Songs/'] = ''
-      tmp = tmp.split('/')
-      tmp[0] + '/' + tmp[1]
+      /#{@app_dir}\/Songs\/(?<dir>[^\/]+\/[^\/]+)/.match(@simfile_full_path)[:dir]
     end
 
     attr_reader :difficulties
