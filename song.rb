@@ -1,5 +1,6 @@
 require './difficulty'
 
+# Factory実装
 class Song
   def self.generate(app_dir, simfile_path, simfile)
     display_bpm = ''
@@ -9,26 +10,7 @@ class Song
       bpms += (/bpms/i =~ line ? line : '')
     end
 
-    difficulties = detect_difficulty(simfile, 'NOTEDATA')
-    if difficulties == ''
-      difficulties = detect_difficulty(simfile, 'NOTES')
-    end
-
-    difficulties = difficulties.split("\r\n")
-                        .each_slice(5)
-                        .map {|item| item.reduce('') {|result, item| result + item.strip}}
-                        .select {|item| item.include?('dance-single')}
-                        .map {|item|
-                          dif = Difficulty::generate(item)
-                          if dif.nil?
-                            pp simfile_path
-                            pp item
-                          end
-                          dif
-                        }
-                        .delete_if {|item| item.nil?}
-
-
+    difficulties = Difficulty::generate_all_difficulties(simfile)
     display_bpm_str = /#DISPLAYBPM:(?<bpm>[[:alnum:]:.]+)/i.match(display_bpm.partition("\r")[0])
     bpm_str = /#BPMS:[0-9.]+=(?<bpm>[0-9.]+)/i.match(bpms.partition("\r")[0])
     Song.new(
@@ -39,32 +21,9 @@ class Song
         app_dir
     )
   end
-
-  def self.detect_difficulty(content, sign)
-    difficulty = ''
-    count = 0
-    read = false
-    content.each_line do |line|
-      if line.include?(sign)
-        read = true
-      end
-      if read
-        difficulty += line
-        count += 1
-
-        if count == 5
-          count = 0
-          read = false
-        end
-      end
-    end
-    difficulty
-  end
-
-  private_class_method :detect_difficulty
 end
 
-
+# Class実装
 class Song
   def initialize(bpm, display_bpm, simfile_full_path, difficulties, app_dir)
     @bpm = bpm
