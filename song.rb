@@ -10,7 +10,7 @@ class Song
       bpms += (/bpms/i =~ line ? line : '')
     end
 
-    difficulties = Difficulty::generate_all_difficulties(simfile, simfile_path)
+    difficulties = Difficulty::generate_difficulties(simfile)
     display_bpm_str = /#DISPLAYBPM:(?<bpm>[[:alnum:]:.]+)/i.match(display_bpm.partition("\r")[0])
     bpm_str = /#BPMS:[0-9.]+=(?<bpm>[0-9.]+)/i.match(bpms.partition("\r")[0])
     Song.new(
