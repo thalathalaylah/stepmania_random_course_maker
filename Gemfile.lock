@@ -1,5 +1,5 @@
 GEM
-  remote: https://rugygems.org/
+  remote: https://rubygems.org/
   specs:
     dotenv (2.5.0)
 
