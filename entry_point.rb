@@ -1,7 +1,9 @@
 require 'open3'
 require './course_maker/course_maker'
+require 'dotenv'
 
-app_dir = '/Applications/StepMania-5.0.12'
+Dotenv.load
+app_dir = ENV['STEPMANIA_APPLICATION_DIRECTORY']
 
 
 setting_hash_array = [
