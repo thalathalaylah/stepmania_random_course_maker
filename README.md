@@ -2,18 +2,19 @@
 stepmaniaの難度指定ランダムコースを作成します
 このコースは各曲ごとに倍速指定を計算し、適用します
 
+
 #　動作が確認できた環境
 - Mac OS High Sierra
 - ruby 2.0 以上
 - Stepmania 5.0.12
 
 # How to use
-1. git clone <this repository>
-1. cd 
-1. bundle install
+1. `git clone <this repository>`
+1. `cd stepmania_random_course_maker`
+1. `bundle install`
 1. .env.templateのSTEPMANIA_APPLICATION_DIRECTORYを設定
 1. .env.templateを.envにリネーム
-1. bundle exec ruby entry_point.rb course_example.rb
+1. `bundle exec ruby entry_point.rb course_example.rb`
 
 # コース設定方法
 course_example.rbを参考にして設定してください
