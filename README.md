@@ -15,6 +15,7 @@ stepmaniaの難度指定ランダムコースを作成します
 1. .env.templateのSTEPMANIA_APPLICATION_DIRECTORYを設定
 1. .env.templateを.envにリネーム
 1. `bundle exec ruby entry_point.rb course_example.rb`
+1. StepmaniaのOptions > RELOAD SONGS/COURSES を実行
 
 # コース設定方法
 course_example.rbを参考にして設定してください
